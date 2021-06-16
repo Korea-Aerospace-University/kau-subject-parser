@@ -20,6 +20,10 @@ try {
   const parsedTxt2 = parsedTxt1.replaceAll("-", "비대면");
 
   const subjectList = parsedTxt2.split("\n");
+  subjectList[0] = subjectList[0].replace(
+    "GWAMOK_NOGWAMOK_KNAMEHAKNYUNISU_NAMEHAKJUM#JUDAMDANG_GYOSU_NAMEJUNGWON#BUNHAPYOIL_GYOSIROOM_NAMEJOJIK_GBBUDAMDANG_GYOSU_NAMEGAESUL_JUNGONGGYOYANG_GBGANGJWA_TYPE_NMGANGJWA_TYPE",
+    ""
+  );
 
   const getClassTypeAndMajor = (string) => {
     const classType = ["PtBL", "FL", "일반", "PmBL"];
