@@ -16,14 +16,16 @@ try {
   const ptbl = p4.replaceAll("PtBLB", "PtBL\n");
   const pmbl = ptbl.replaceAll("PmBLC", "PmBL\n");
   const trimNsbp = pmbl.replaceAll(/&nbsp;/g, "");
-  const parsedTxt1 = trimNsbp.replaceAll("-/-", "비대면");
-  const parsedTxt2 = parsedTxt1.replaceAll("-", "비대면");
+  const parsedTxt1 = trimNsbp.replaceAll("-/-", "-");
+  // const parsedTxt2 = parsedTxt1.replaceAll("-", "비대면");
 
-  const subjectList = parsedTxt2.split("\n");
+  const subjectList = parsedTxt1.split("\n");
   subjectList[0] = subjectList[0].replace(
     "GWAMOK_NOGWAMOK_KNAMEHAKNYUNISU_NAMEHAKJUM#JUDAMDANG_GYOSU_NAMEJUNGWON#BUNHAPYOIL_GYOSIROOM_NAMEJOJIK_GBBUDAMDANG_GYOSU_NAMEGAESUL_JUNGONGGYOYANG_GBGANGJWA_TYPE_NMGANGJWA_TYPE",
     ""
   );
+
+  console.log(subjectList);
 
   const getClassTypeAndMajor = (string) => {
     const classType = ["PtBL", "FL", "일반", "PmBL"];
@@ -69,7 +71,7 @@ try {
         }
       }
 
-      const classroom = string.substring(lastIndex + 13, A0000Index);
+      let classroom = string.substring(lastIndex + 13, A0000Index);
 
       if (classHour.length === 0) {
         classHour.push("강의시간 정보가 없습니다.");
