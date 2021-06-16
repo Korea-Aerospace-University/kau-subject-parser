@@ -16,6 +16,7 @@
 
 ```
 {
+    "id": 고유번호 (number),
     "major": 전공 (string),
     "classType": 학습유형 (string),
     "subjectNumber": 과목번호 (string),

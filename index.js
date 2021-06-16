@@ -132,6 +132,7 @@ try {
         subjectScore,
       } = getSubjectInfo(subject);
       const data = {
+        id: Number(subjectNumber),
         major,
         classType,
         subjectNumber,
