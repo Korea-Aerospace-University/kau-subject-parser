@@ -4,7 +4,7 @@
 
 ![스크린샷](./screenshot.png)
 
-### Parsed data (JSON)
+### Parsed Result (JSON)
 
 ![파싱 후](./result.png)
 
