@@ -149,7 +149,7 @@ try {
       continue;
     }
   }
-  fs.writeFileSync("parsedData.json", JSON.stringify(dataList));
+  fs.writeFileSync("data.json", JSON.stringify(dataList));
 } catch (err) {
   console.log("존재하지 않는 파일이거나, 파일이 손상되었습니다.");
   console.log("파일 이름이 subject.txt가 맞는지 확인해주세요.");
