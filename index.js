@@ -25,10 +25,22 @@ try {
     ""
   );
 
-  console.log(subjectList);
-
   const getClassTypeAndMajor = (string) => {
     const classType = ["PtBL", "FL", "일반", "PmBL"];
+    if (string.includes("인문자연학부")) {
+      for (type of classType) {
+        if (string.includes(type)) {
+          // console.log(string, string.indexOf("인문자연학부") + 6, string.indexOf(type));
+          const liberalType = string.substring(
+            string.indexOf("인문자연학부") + 6,
+            string.indexOf(type)
+          );
+          let temp = string.replace(liberalType, "");
+          let major = temp.replace(type, "");
+          return { major, liberalType, classType: type };
+        }
+      }
+    }
     for (type of classType) {
       if (string.includes(type)) {
         const major = string.replace(type, "");
@@ -48,6 +60,9 @@ try {
         if (isNaN(char) === false) {
           maxStudent += char;
         }
+        if (profName === "") {
+          profName = "-";
+        }
         if (isNaN(char) === true && maxStudent !== "") {
           return { profName, maxStudent };
         }
@@ -58,24 +73,30 @@ try {
   };
 
   const getClassHourAndClassroom = (string) => {
-    const weekDays = ["월)", "화)", "수)", "목)", "금)"];
+    const weekDays = ["월)", "월)", "화)", "화)", "수)", "수)", "목)", "목)", "금)", "금)"];
+    console.log(string);
     const A0000Index = string.indexOf("A0000");
     const classHour = [];
     let lastIndex = 0;
+
     try {
       for (weekday of weekDays) {
         const weekIndex = string.indexOf(weekday);
         if (weekIndex !== -1) {
           lastIndex = weekIndex;
           classHour.push(string.substring(weekIndex, weekIndex + 13));
+          string = string.replace(string.substring(weekIndex, weekIndex + 13), "");
         }
       }
 
       let classroom = string.substring(lastIndex + 13, A0000Index);
+      if (classroom === "-") {
+        classroom = "미배정";
+      }
 
       if (classHour.length === 0) {
-        classHour.push("강의시간 정보가 없습니다.");
-        return { classHour, classroom: "강의실 정보가 없습니다." };
+        classHour.push("미배정"); // 강의시간 정보가 없습니다.
+        return { classHour, classroom: "미배정" }; // 강의실 정보가 없습니다.
       }
 
       return { classHour, classroom };
@@ -85,12 +106,13 @@ try {
   };
 
   const getSubjectInfo = (subject) => {
+    //0427현대물리학교선3유병길50금)10:00∼13:00강의동104A0000인문자연학부자연과과학일반1
     // 0776확률통계론2전필3김선옥65월)09:00∼10:30수)10:30∼12:00비대면A0000소프트일반
-    // subString1 = "A0000소프트일반"
+    // subString1 = "소프트일반" or "인문자연학부자연과과학일반"
     // subString2 = "김선옥65월)09:00∼10:30수)10:30∼12:00비대면A0000소프트일반"
     const A0000Index = subject.indexOf("A0000");
     const subString1 = subject.substring(A0000Index + 5, subject.length);
-    const { major, classType } = getClassTypeAndMajor(subString1);
+    const { major, liberalType, classType } = getClassTypeAndMajor(subString1);
 
     const subjectNumber = subject.substring(0, 4);
     const subjectType = ["전선", "전필", "일선", "교선", "교필"];
@@ -98,10 +120,16 @@ try {
     for (type of subjectType) {
       let typeIndex = subject.indexOf(type);
       if (typeIndex !== -1) {
-        if (isNaN(subject[typeIndex - 1]) || isNaN(subject[typeIndex + 2])) {
+        if (isNaN(subject[typeIndex + 2])) {
           continue;
         }
         const subString2 = subject.substring(typeIndex + 3, subject.length);
+        // typeIndex를 전후로 수강학년 / 학점이 나오는데, 교양과목은 수강학년이 없는 경우가 대부분임.
+        // 유지보수 시, 이를 고려해야 함
+        const subjectName = isNaN(subject[typeIndex - 1])
+          ? subject.substring(4, typeIndex)
+          : subject.substring(4, typeIndex - 1);
+        const subjectGrade = isNaN(subject[typeIndex - 1]) ? "-" : subject[typeIndex - 1];
         const { profName, maxStudent } = getProfessorNameAndMaxStudent(subString2);
         const { classHour, classroom } = getClassHourAndClassroom(subString2);
 
@@ -110,11 +138,12 @@ try {
           classType,
           subjectNumber,
           subjectType: type,
-          subjectGrade: subject[typeIndex - 1],
-          subjectName: subject.substring(4, typeIndex - 1),
+          subjectGrade,
+          subjectName,
           classHour,
           classroom,
           profName,
+          liberalType,
           maxStudent,
           subjectScore: subject[typeIndex + 2],
         };
@@ -133,6 +162,7 @@ try {
         subjectGrade,
         classHour,
         classroom,
+        liberalType,
         profName,
         maxStudent,
         subjectScore,
@@ -147,6 +177,7 @@ try {
         subjectGrade,
         classHour,
         classroom,
+        liberalType,
         profName,
         maxStudent,
         subjectScore,
