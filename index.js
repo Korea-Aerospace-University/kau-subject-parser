@@ -73,24 +73,30 @@ try {
   };
 
   const getClassHourAndClassroom = (string) => {
-    const weekDays = ["월)", "화)", "수)", "목)", "금)"];
+    const weekDays = ["월)", "월)", "화)", "화)", "수)", "수)", "목)", "목)", "금)", "금)"];
+    console.log(string);
     const A0000Index = string.indexOf("A0000");
     const classHour = [];
     let lastIndex = 0;
+
     try {
       for (weekday of weekDays) {
         const weekIndex = string.indexOf(weekday);
         if (weekIndex !== -1) {
           lastIndex = weekIndex;
           classHour.push(string.substring(weekIndex, weekIndex + 13));
+          string = string.replace(string.substring(weekIndex, weekIndex + 13), "");
         }
       }
 
       let classroom = string.substring(lastIndex + 13, A0000Index);
+      if (classroom === "-") {
+        classroom = "미배정";
+      }
 
       if (classHour.length === 0) {
-        classHour.push("강의시간 정보가 없습니다.");
-        return { classHour, classroom: "강의실 정보가 없습니다." };
+        classHour.push("미배정"); // 강의시간 정보가 없습니다.
+        return { classHour, classroom: "미배정" }; // 강의실 정보가 없습니다.
       }
 
       return { classHour, classroom };
